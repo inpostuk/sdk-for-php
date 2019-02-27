@@ -1,7 +1,7 @@
 <?php
 
 /**
- * (c) InPost UK Ltd <support@inpost.co.uk>
+ * (c) InPost UK Ltd <it_support@inpost.co.uk>
  * This source file is subject to the license that is bundled
  * with this source code in the file LICENSE.
  *
