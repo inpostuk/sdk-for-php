@@ -283,7 +283,7 @@ class Inpost_Api_Client
         }
 
         if ($customerReference) {
-            $params['customer_reference'] = $customerReference;
+            $params['rma'] = $customerReference;
         }
 
         $response = (array) $this->postOnEndpoint($path, $params);
@@ -386,7 +386,7 @@ class Inpost_Api_Client
      * @throws Inpost_Exception
      * @throws Zend_Http_Client_Exception
      */
-    public function createParcel($receiverPhone, $machineId, $size, $weight, $receiverEmail)
+    public function createParcel($receiverPhone, $machineId, $size, $weight, $receiverEmail, $customerReference = false)
     {
         if (! in_array(strtoupper($size), self::$allowedParcelSizes, false)) {
             Throw new Inpost_Exception('createParcel: Parcel size is not valid. Allowed: A, B, C.');
@@ -406,6 +406,11 @@ class Inpost_Api_Client
             'weight' => $weight,
             'receiver_email' => $receiverEmail
         );
+
+        if ($customerReference) {
+            $params['customer_reference'] = $customerReference;
+        }
+
         $response = $this->postOnEndpoint($path, $params);
 
         $body = (array) $response;

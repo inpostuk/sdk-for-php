@@ -1,0 +1,24 @@
+{
+  "name": "inpostuk/sdk-for-php",
+  "description": "Software Development Kit for InPost UK services in PHP",
+  "type": "library",
+  "license": [
+    "GNU"
+  ],
+  "require": {
+    "php": ">=5.2.11"
+  },
+  "keywords": [
+    "inpost",
+    "inpostuk"
+  ],
+  "version": "1.0.0",
+  "autoload": {
+    "psr-0": {
+      "Inpost_": "src/"
+    }
+  },
+  "include-path": [
+    "src/"
+  ]
+}
