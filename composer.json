@@ -3,7 +3,7 @@
   "description": "Software Development Kit for InPost UK services in PHP",
   "type": "library",
   "license": [
-    "GNU"
+    "GPL-3.0-or-later"
   ],
   "require": {
     "php": ">=5.2.11"
