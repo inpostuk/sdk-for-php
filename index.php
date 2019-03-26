@@ -14,7 +14,7 @@ $response = array();
 
 //$response = $client->getMachinesList();
 
-//$response = $client->createParcel('07712341234', 'UKLON32038', 'A', '10', 'john@doe.com');
+//$response = $client->createParcel('07712341234', 'UKLON32038', 'A', '10', 'info@nmediasystems.com');
 
 //$response = $client->pay('13883900004874');
 
@@ -39,8 +39,10 @@ $target_address = array(
 
 //$response = $client->createReturn('7712341234', 'john@doe.com', 'a', $target_address);
 
+
 //$response = $client->getReturnLabel('7364418727');
 //$client->validateAccount();
 
-//var_dump($response);
+
+var_dump($response);
 // CP000001639UK

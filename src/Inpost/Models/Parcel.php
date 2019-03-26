@@ -43,16 +43,18 @@ class Inpost_Models_Parcel extends Varien_Object
     public function preparePhone($phone)
     {
         $phone = trim($phone);
-        $phone = preg_replace('/(^\+44)|(^0044)|(^0)|(\s+)/', '', $phone);
+        $phone = preg_replace('/(^\+44)|(^0044)|(^44)|(^0)|(\s+)/', '', $phone);
         return $phone;
     }
-    
-    public function prepareTargetAddress($targetAddress) {
+
+    public function prepareTargetAddress($targetAddress)
+    {
         $targetAddress['phone'] = $this->preparePhone($targetAddress['phone']);
-        
+        $targetAddress['post_code'] = $this->preparePostcode($targetAddress['post_code']);
+
         if (array_key_exists('street1', $targetAddress)) $targetAddress['building_no'] = $targetAddress['street1'];
         if (array_key_exists('street2', $targetAddress)) $targetAddress['street'] = $targetAddress['street2'];
-        
+
         return $targetAddress;
     }
 
@@ -66,12 +68,35 @@ class Inpost_Models_Parcel extends Varien_Object
     public function validateTargetAddress($targetAddress)
     {
         return (is_array($targetAddress) &&
-            array_key_exists('first_name', $targetAddress) &&
-            array_key_exists('last_name', $targetAddress) &&
-            array_key_exists('building_no', $targetAddress) &&
-            array_key_exists('street', $targetAddress)) &&
+                array_key_exists('first_name', $targetAddress) &&
+                array_key_exists('last_name', $targetAddress) &&
+                array_key_exists('building_no', $targetAddress) &&
+                array_key_exists('street', $targetAddress)) &&
             array_key_exists('city', $targetAddress) &&
             array_key_exists('post_code', $targetAddress) &&
             array_key_exists('phone', $targetAddress);
+    }
+
+    public function preparePostcode($postcode)
+    {
+        $postcode = str_replace(' ', '', $postcode);
+        switch (strlen($postcode)) {
+            case 5:
+                $postcode = $this->stringInsert($postcode, ' ', 2);
+                break;
+            case 6:
+                $postcode = $this->stringInsert($postcode, ' ', 3);
+                break;
+            case 7:
+                $postcode = $this->stringInsert($postcode, ' ', 4);
+                break;
+        }
+
+        return strtoupper($postcode);
+    }
+
+    protected function stringInsert($string, $insert, $pos)
+    {
+        return substr($string, 0, $pos) . $insert . substr($string, $pos);
     }
 }

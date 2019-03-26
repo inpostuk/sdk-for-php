@@ -6,9 +6,12 @@
  *
  * Built by NMedia Systems Ltd, <info@nmediasystems.com>
  */
-set_include_path(__DIR__ . '/../../');
+set_include_path(get_include_path() . ':' . realpath(__DIR__ . '/../../'));
 
-require_once 'Zend/Http/Client.php';
+if (!class_exists('Zend_Http_Client')) {
+    require_once 'Zend/Http/Client.php';
+}
+
 require_once 'Varien/Object.php';
 require_once 'Inpost/Exception.php';
 require_once 'Inpost/Models/Machine.php';
@@ -94,13 +97,14 @@ class Inpost_Api_Client
      * Set InPost API endpoint.
      * Please use one of the following const: Inpost_Api_Client::PRODUCTION_API_ENDPOINT or Inpost_Api_Client::SANDBOX_API_ENDPOINT
      *
-     * @param
-     *            $endpoint
+     * @param $apiEndpoint
      * @return $this
      */
-    public function setApiEndpoint($endpoint)
-    {
-        $this->apiEndpoint = $endpoint;
+    public function setEndpoint($apiEndpoint) {
+        if ($apiEndpoint != self::PRODUCTION_API_ENDPOINT && $apiEndpoint != self::SANDBOX_API_ENDPOINT) {
+            Throw new InvalidArgumentException('Wrong InPost API endpoint provided');
+        }
+        $this->apiEndpoint = $apiEndpoint;
         return $this;
     }
 
@@ -386,7 +390,7 @@ class Inpost_Api_Client
      * @throws Inpost_Exception
      * @throws Zend_Http_Client_Exception
      */
-    public function createParcel($receiverPhone, $machineId, $size, $weight, $receiverEmail, $customerReference = false)
+    public function createParcel($receiverPhone, $machineId, $size, $weight, $receiverEmail = false, $customerReference = false)
     {
         if (! in_array(strtoupper($size), self::$allowedParcelSizes, false)) {
             Throw new Inpost_Exception('createParcel: Parcel size is not valid. Allowed: A, B, C.');
@@ -403,9 +407,10 @@ class Inpost_Api_Client
             'receiver_phone' => $receiverPhone,
             'target_machine_id' => $machineId,
             'size' => strtoupper($size),
-            'weight' => $weight,
-            'receiver_email' => $receiverEmail
+            'weight' => $weight
         );
+        if ($receiverEmail)
+            $params['receiver_email'] = $receiverEmail;
 
         if ($customerReference) {
             $params['customer_reference'] = $customerReference;

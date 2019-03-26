@@ -16,9 +16,7 @@
   "autoload": {
     "psr-0": {
       "Inpost_": "src/"
-    }
-  },
-  "include-path": [
-    "src/"
-  ]
+    },
+    "exclude-from-classmap": ["src/Zend/", "src/Varien/", "src/TCPDF/"]
+  }
 }
