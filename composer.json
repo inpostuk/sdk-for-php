@@ -3,7 +3,7 @@
   "description": "Software Development Kit for InPost UK services in PHP",
   "type": "library",
   "license": [
-    "GPL-3.0-or-later"
+    "GNU"
   ],
   "require": {
     "php": ">=5.2.11"
@@ -16,6 +16,6 @@
     "psr-0": {
       "Inpost_": "src/"
     },
-    "exclude-from-classmap": ["src/Zend/", "src/Varien/", "src/TCPDF/"]
+    "exclude-from-classmap": ["src/Zend/", "src/TCPDF/"]
   }
 }
