@@ -12,7 +12,7 @@ if (!class_exists('Zend_Http_Client')) {
     require_once 'Zend/Http/Client.php';
 }
 
-require_once 'Inpost/Object.php';
+require_once 'Varien/Object.php';
 require_once 'Inpost/Exception.php';
 require_once 'Inpost/Models/Machine.php';
 require_once 'Inpost/Models/Parcel.php';
@@ -69,7 +69,7 @@ class Inpost_Api_Client
      * @param string $apiEndpoint
      * @param string $merchantEmail
      */
-    public function __construct($token = '', $apiEndpoint = self::PRODUCTION_API_ENDPOINT, $merchantEmail = '')
+    public function __construct($token, $apiEndpoint = self::PRODUCTION_API_ENDPOINT, $merchantEmail = '')
     {
         $this->token = $token;
         $this->apiEndpoint = $apiEndpoint;
@@ -466,8 +466,6 @@ class Inpost_Api_Client
      */
     protected function getFromEndpoint($path, $params = array(), $returnJsonBody = false)
     {
-        if (!$this->token)
-            Throw new Exception('Token invalid');
         $this->apiClient->resetParameters();
         $this->apiClient->setUri($this->apiEndpoint . $path);
         $this->apiClient->setMethod(Zend_Http_Client::GET);
@@ -496,8 +494,6 @@ class Inpost_Api_Client
      */
     protected function postOnEndpoint($path, array $params = array())
     {
-        if (!$this->token)
-            Throw new Exception('Token invalid');
         $this->apiClient->setUri($this->apiEndpoint . $path);
         $this->apiClient->setMethod(Zend_Http_Client::POST);
         $this->apiClient->setHeaders("Authorization", "Bearer {$this->token}");

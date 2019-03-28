@@ -1,7 +1,38 @@
 <?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    Varien
+ * @package     Varien_Object
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
 
 
-class Inpost_Object implements ArrayAccess
+/**
+ * Varien Object
+ *
+ * @category   Varien
+ * @package    Varien_Object
+ * @author      Magento Core Team <core@magentocommerce.com>
+ */
+class Varien_Object implements ArrayAccess
 {
 
     /**
@@ -96,7 +127,7 @@ class Inpost_Object implements ArrayAccess
      * Inits mapping array of object's previously used fields to new fields.
      * Must be overloaded by descendants to set concrete fields map.
      *
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     protected function _initOldFieldsMap()
     {
@@ -107,7 +138,7 @@ class Inpost_Object implements ArrayAccess
      * Called after old fields are inited. Forms synchronization map to sync old fields and new fields
      * between each other.
      *
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     protected function _prepareSyncFieldsMap()
     {
@@ -153,7 +184,7 @@ class Inpost_Object implements ArrayAccess
      * set name of object id field
      *
      * @param   string $name
-     * @return  Inpost_Object
+     * @return  Varien_Object
      */
     public function setIdFieldName($name)
     {
@@ -165,7 +196,7 @@ class Inpost_Object implements ArrayAccess
      * Retrieve name of object id field
      *
      * @param   string $name
-     * @return  Inpost_Object
+     * @return  Varien_Object
      */
     public function getIdFieldName()
     {
@@ -189,7 +220,7 @@ class Inpost_Object implements ArrayAccess
      * Set object id field value
      *
      * @param   mixed $value
-     * @return  Inpost_Object
+     * @return  Varien_Object
      */
     public function setId($value)
     {
@@ -207,7 +238,7 @@ class Inpost_Object implements ArrayAccess
      * Retains previous data in the object.
      *
      * @param array $arr
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     public function addData(array $arr)
     {
@@ -227,7 +258,7 @@ class Inpost_Object implements ArrayAccess
      *
      * @param string|array $key
      * @param mixed $value
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     public function setData($key, $value=null)
     {
@@ -251,7 +282,7 @@ class Inpost_Object implements ArrayAccess
      * $key can be a string only. Array will be ignored.
      *
      * @param string $key
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     public function unsetData($key=null)
     {
@@ -274,7 +305,7 @@ class Inpost_Object implements ArrayAccess
      * $key can be a string only. Array will be ignored.
      *
      * @param string $key
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     public function unsetOldData($key=null)
     {
@@ -322,7 +353,7 @@ class Inpost_Object implements ArrayAccess
                         return $default;
                     }
                     $data = $data[$k];
-                } elseif ($data instanceof Inpost_Object) {
+                } elseif ($data instanceof Varien_Object) {
                     $data = $data->getData($k);
                 } else {
                     return $default;
@@ -351,7 +382,7 @@ class Inpost_Object implements ArrayAccess
                 $arr = explode("\n", $value);
                 return (isset($arr[$index]) && (!empty($arr[$index]) || strlen($arr[$index]) > 0))
                     ? $arr[$index] : null;
-            } elseif ($value instanceof Inpost_Object) {
+            } elseif ($value instanceof Varien_Object) {
                 return $value->getData($index);
             }
             return $default;
@@ -375,7 +406,7 @@ class Inpost_Object implements ArrayAccess
      *
      * @param string $key
      * @param mixed $args
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     public function setDataUsingMethod($key, $args=array())
     {
@@ -480,6 +511,87 @@ class Inpost_Object implements ArrayAccess
     }
 
     /**
+     * Convert object attributes to XML
+     *
+     * @param  array $arrAttributes array of required attributes
+     * @param string $rootName name of the root element
+     * @return string
+     */
+    protected function __toXml(array $arrAttributes = array(), $rootName = 'item', $addOpenTag=false, $addCdata=true)
+    {
+        $xml = '';
+        if ($addOpenTag) {
+            $xml.= '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+        }
+        if (!empty($rootName)) {
+            $xml.= '<'.$rootName.'>'."\n";
+        }
+        $xmlModel = new Varien_Simplexml_Element('<node></node>');
+        $arrData = $this->toArray($arrAttributes);
+        foreach ($arrData as $fieldName => $fieldValue) {
+            if ($addCdata === true) {
+                $fieldValue = "<![CDATA[$fieldValue]]>";
+            } else {
+                $fieldValue = $xmlModel->xmlentities($fieldValue);
+            }
+            $xml.= "<$fieldName>$fieldValue</$fieldName>"."\n";
+        }
+        if (!empty($rootName)) {
+            $xml.= '</'.$rootName.'>'."\n";
+        }
+        return $xml;
+    }
+
+    /**
+     * Public wrapper for __toXml
+     *
+     * @param array $arrAttributes
+     * @param string $rootName
+     * @return string
+     */
+    public function toXml(array $arrAttributes = array(), $rootName = 'item', $addOpenTag=false, $addCdata=true)
+    {
+        return $this->__toXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+    }
+
+    /**
+     * Convert object attributes to JSON
+     *
+     * @param  array $arrAttributes array of required attributes
+     * @return string
+     */
+    protected function __toJson(array $arrAttributes = array())
+    {
+        $arrData = $this->toArray($arrAttributes);
+        $json = Zend_Json::encode($arrData);
+        return $json;
+    }
+
+    /**
+     * Public wrapper for __toJson
+     *
+     * @param array $arrAttributes
+     * @return string
+     */
+    public function toJson(array $arrAttributes = array())
+    {
+        return $this->__toJson($arrAttributes);
+    }
+
+    /**
+     * Convert object attributes to string
+     *
+     * @param  array  $arrAttributes array of required attributes
+     * @param  string $valueSeparator
+     * @return string
+     */
+//    public function __toString(array $arrAttributes = array(), $valueSeparator=',')
+//    {
+//        $arrData = $this->toArray($arrAttributes);
+//        return implode($valueSeparator, $arrData);
+//    }
+
+    /**
      * Public wrapper for __toString
      *
      * Will use $format as an template and substitute {{key}} for attributes
@@ -512,25 +624,33 @@ class Inpost_Object implements ArrayAccess
     {
         switch (substr($method, 0, 3)) {
             case 'get' :
+                //Varien_Profiler::start('GETTER: '.get_class($this).'::'.$method);
                 $key = $this->_underscore(substr($method,3));
                 $data = $this->getData($key, isset($args[0]) ? $args[0] : null);
+                //Varien_Profiler::stop('GETTER: '.get_class($this).'::'.$method);
                 return $data;
 
             case 'set' :
+                //Varien_Profiler::start('SETTER: '.get_class($this).'::'.$method);
                 $key = $this->_underscore(substr($method,3));
                 $result = $this->setData($key, isset($args[0]) ? $args[0] : null);
+                //Varien_Profiler::stop('SETTER: '.get_class($this).'::'.$method);
                 return $result;
 
             case 'uns' :
+                //Varien_Profiler::start('UNS: '.get_class($this).'::'.$method);
                 $key = $this->_underscore(substr($method,3));
                 $result = $this->unsetData($key);
+                //Varien_Profiler::stop('UNS: '.get_class($this).'::'.$method);
                 return $result;
 
             case 'has' :
+                //Varien_Profiler::start('HAS: '.get_class($this).'::'.$method);
                 $key = $this->_underscore(substr($method,3));
+                //Varien_Profiler::stop('HAS: '.get_class($this).'::'.$method);
                 return isset($this->_data[$key]);
         }
-        throw new Inpost_Exception("Invalid method ".get_class($this)."::".$method."(".print_r($args,1).")");
+        throw new Varien_Exception("Invalid method ".get_class($this)."::".$method."(".print_r($args,1).")");
     }
 
     /**
@@ -585,7 +705,9 @@ class Inpost_Object implements ArrayAccess
         if (isset(self::$_underscoreCache[$name])) {
             return self::$_underscoreCache[$name];
         }
+        #Varien_Profiler::start('underscore');
         $result = strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $name));
+        #Varien_Profiler::stop('underscore');
         self::$_underscoreCache[$name] = $result;
         return $result;
     }
@@ -640,7 +762,7 @@ class Inpost_Object implements ArrayAccess
      *
      * @param string $key
      * @param mixed $data
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     public function setOrigData($key=null, $data=null)
     {
@@ -669,7 +791,7 @@ class Inpost_Object implements ArrayAccess
      * Clears data changes status
      *
      * @param boolean $value
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     public function setDataChanges($value)
     {
@@ -700,7 +822,7 @@ class Inpost_Object implements ArrayAccess
                 $debug[$key] = $value;
             } elseif (is_array($value)) {
                 $debug[$key] = $this->debug($value, $objects);
-            } elseif ($value instanceof Inpost_Object) {
+            } elseif ($value instanceof Varien_Object) {
                 $debug[$key.' ('.get_class($value).')'] = $value->debug(null, $objects);
             }
         }
@@ -777,7 +899,7 @@ class Inpost_Object implements ArrayAccess
      *
      * @param string $field
      * @param boolean $flag
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     public function flagDirty($field, $flag=true)
     {

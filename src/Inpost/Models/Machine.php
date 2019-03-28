@@ -43,7 +43,7 @@
  * @method Inpost_Models_Machine isPaymentAvailable()
  */
 
-class Inpost_Models_Machine extends Inpost_Object
+class Inpost_Models_Machine extends Varien_Object
 {
     const TYPE_POK = 'POK';
     const TYPE_PACK_MACHINE = 'Pack Machine';
@@ -80,7 +80,7 @@ class Inpost_Models_Machine extends Inpost_Object
      * Retains previous data in the object.
      *
      * @param array $arr
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     public function addData(array $arr)
     {

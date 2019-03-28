@@ -13,7 +13,7 @@
  *
  * Represents InPost parcel sent to a machine or a POP, picked up by a courier.
  */
-class Inpost_Models_Parcel extends Inpost_Object
+class Inpost_Models_Parcel extends Varien_Object
 {
     /**
      * Add data to the object.
@@ -21,7 +21,7 @@ class Inpost_Models_Parcel extends Inpost_Object
      * Retains previous data in the object.
      *
      * @param array $arr
-     * @return Inpost_Object
+     * @return Varien_Object
      */
     public function addData(array $arr)
     {
