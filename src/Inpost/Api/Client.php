@@ -466,8 +466,6 @@ class Inpost_Api_Client
      */
     protected function getFromEndpoint($path, $params = array(), $returnJsonBody = false)
     {
-        if (!$this->token)
-            Throw new Exception('Token invalid');
         $this->apiClient->resetParameters();
         $this->apiClient->setUri($this->apiEndpoint . $path);
         $this->apiClient->setMethod(Zend_Http_Client::GET);
@@ -496,8 +494,6 @@ class Inpost_Api_Client
      */
     protected function postOnEndpoint($path, array $params = array())
     {
-        if (!$this->token)
-            Throw new Exception('Token invalid');
         $this->apiClient->setUri($this->apiEndpoint . $path);
         $this->apiClient->setMethod(Zend_Http_Client::POST);
         $this->apiClient->setHeaders("Authorization", "Bearer {$this->token}");
